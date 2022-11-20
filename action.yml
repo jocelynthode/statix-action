@@ -24,19 +24,12 @@ runs:
       run: 'nix run nixpkgs#statix -- ${{ inputs.action }} ${{ inputs.directory }}'
       shell: bash
       id: statix
-    - run: |
-        if ! git diff --quiet --exit-code ; then
-          git commit -a -F - <<EOF
-          ${{ inputs.commit_message }}
-        EOF
-        fi
+    - uses: stefanzweifel/git-auto-commit-action@v4
       if: inputs.create_pr == 'true'
-      env:
-        GIT_AUTHOR_NAME: github-actions[bot]
-        GIT_AUTHOR_EMAIL: <github-actions[bot]@users.noreply.github.com>
-        GIT_COMMITTER_NAME: github-actions[bot]
-        GIT_COMMITTER_EMAIL: <github-actions[bot]@users.noreply.github.com>
-      shell: bash
+      with:
+        branch: statix-lint
+        create_branch: true
+        commit_message: '${{ inputs.commit_message }}'
     - name: Create PR
       if: inputs.create_pr == 'true'
       uses: peter-evans/create-pull-request@v3
@@ -47,5 +40,5 @@ runs:
         body: |
           Automated linting performed by the [statix-action](https://github.com/jocelynthode/statix-action) GitHub Action.
 branding:
-    icon: 'minus-circle'
-    color: 'red'
+    icon: 'check-circle'
+    color: 'green'
