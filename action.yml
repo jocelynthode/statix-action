@@ -35,6 +35,7 @@ runs:
       uses: peter-evans/create-pull-request@v4
       with:
         branch: statix-lint
+        base: '${{ github.event.repository.default_branch }}'
         delete-branch: true
         title: "${{ inputs.commit_message }}"
         body: |
